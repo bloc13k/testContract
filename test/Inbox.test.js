@@ -3,17 +3,17 @@ const ganache = require('ganache-cli');
 const Web3 = require('web3');
 const web3 = new Web3(ganache.provider());
  
-const { abi, evm } = require('../compile');
+const compiled = require('../bin/contracts/Inbox.json');
  
 let accounts;
 let inbox;
- 
+
 beforeEach(async () => {
   // Get a list of all accounts
   accounts = await web3.eth.getAccounts();
-  inbox = await new web3.eth.Contract(abi)
+  inbox = await new web3.eth.Contract(compiled.abi)
     .deploy({
-      data: evm.bytecode.object,
+      data: compiled.bytecode,
       arguments: ['Hi there!'],
     })
     .send({ from: accounts[0], gas: '1000000' });
